@@ -43,9 +43,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+from src.pipeline import main as run_pipeline
+
 if not PREDICTIONS_PATH.exists():
-    st.warning("Run `python -m src.pipeline` first.")
-    st.stop()
+    st.warning("No data found. Running pipeline automatically...")
+    with st.spinner("Generating incident data and training model..."):
+        run_pipeline()
+    st.success("Pipeline executed successfully. Reloading app...")
+    st.rerun()
 
 incidents = pd.read_csv(INCIDENTS_PATH)
 preds = pd.read_csv(PREDICTIONS_PATH)
